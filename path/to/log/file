@@ -1,0 +1,6 @@
+time="Sat, 05 Nov 2022 17:02:33 +0500" level=info msg="some message"
+time="Sat, 05 Nov 2022 17:02:33 +0500" level=debug msg="some message"
+time="Sat, 05 Nov 2022 17:02:46 +0500" level=info msg="some message"
+time="Sat, 05 Nov 2022 17:02:46 +0500" level=debug msg="some message"
+time="Sat, 05 Nov 2022 17:03:04 +0500" level=info msg="some message"
+time="Sat, 05 Nov 2022 17:03:04 +0500" level=debug msg="some message"
