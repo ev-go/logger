@@ -1,0 +1,2 @@
+[DEBUG]: 2022-11-04 21:57:26 - Hello, world! 7
+[INFO]: 2022-11-04 21:57:30 - Info Level 1 65
