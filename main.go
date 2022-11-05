@@ -1,57 +1,43 @@
 package main
 
 import (
-	"fmt"
-	"io"
-	"os"
+	"path/filepath"
 	"time"
 
-	"github.com/sirupsen/logrus"
-	easy "github.com/t-tomalak/logrus-easy-formatter"
+	log "github.com/sirupsen/logrus"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 const IS_DEBUG = 1
 
 func main() {
 
-	logFileName := "log" + time.Now().Format("20060102") + ".txt"
-	fmt.Println(logFileName)
-	logFile, err := os.OpenFile(logFileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
-	if err != nil {
-		fmt.Println("Failed to create logfile" + logFileName)
-		panic(err)
-	}
-	defer logFile.Close()
-
-	log := &logrus.Logger{
-		Out:   io.MultiWriter(logFile, os.Stdout),
-		Level: logrus.TraceLevel,
-		Formatter: &easy.Formatter{
-			TimestampFormat: "2006-01-02 15:04:05",
-			LogFormat:       "[%lvl%]: %time% - %msg%\n",
-		},
+	lumberjackLogger := &lumberjack.Logger{
+		// Log file abbsolute path, os agnostic
+		Filename:   filepath.ToSlash("./file.txt"),
+		MaxSize:    1, // MB
+		MaxBackups: 30,
+		MaxAge:     30,    // days
+		Compress:   false, // disabled by default
 	}
 
-	var a, b, c int
-	a = 2
-	b = 5
-	c = a + b
+	// Fork writing into two outputs
+	//multiWriter := io.MultiWriter(os.Stdout, lumberjackLogger)
 
-	// logrus.Traceln("Trace Level")
-	// logrus.Debugln("Debug Level")
-	// logrus.Infoln("Info Level")
-	// logrus.Warningln("Warning Level")
-	// logrus.Errorln("Error Level")
-	// logrus.Fatalln("Fatal Level")
-	// logrus.Panicln("Panic Level")
+	logFormatter := new(log.TextFormatter)
+	logFormatter.TimestampFormat = time.RFC3339 // or RFC3339 RFC1123Z
+	logFormatter.FullTimestamp = true
 
-	log.Debugln("Hello, world!", c)
+	log.SetFormatter(logFormatter)
+	log.SetLevel(log.InfoLevel)
+	log.SetLevel(log.DebugLevel)
+	log.SetOutput(lumberjackLogger)
 
-	scanInt, err := fmt.Scan(&a)
-	if err != nil {
-		log.Errorln("Чтение с консоли не удалось", err)
+	log.Info("some message")
+
+	for i := 0; i < 1000000; i++ {
+		log.Debug("some message")
 	}
-
-	log.Infoln("Info Level", scanInt, a)
+	log.Debug("some message")
 
 }
