@@ -13,9 +13,8 @@ const IS_DEBUG = 1
 func main() {
 
 	lumberjackLogger := &lumberjack.Logger{
-		// Log file abbsolute path, os agnostic
 		Filename:   filepath.ToSlash("./file.txt"),
-		MaxSize:    1, // MB
+		MaxSize:    5, // MB
 		MaxBackups: 30,
 		MaxAge:     30,    // days
 		Compress:   false, // disabled by default
